@@ -1,28 +1,29 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-
-const app = express();
-
-app.use(bodyParser.urlencoded({extended: true}));
-
-app.get('/', function(req, res){
-
-    const today = new Date();
-
-    const currentDay = today.getDay();
-
-    if(currentDay === 6 || currentDay === 0)
-    {
-        res.write("It's Time to Read some Books and do some code");
-    }
-    else{
-        res.write("It's time to Concentarte to University Studies");
-    }
-
-    res.send();
-});
-
-
-
-
-app.listen(process.env.PORT || 3000, ()=> console.log("Server is Running at 5000 Port"));
+var express =   require("express");  
+var multer  =   require('multer');  
+var app =   express();  
+var storage =   multer.diskStorage({  
+  destination: function (req, file, callback) {  
+    callback(null, './uploads');  
+  },  
+  filename: function (req, file, callback) {  
+    callback(null, file.originalname);  
+  }  
+});  
+var upload = multer({ storage : storage}).single('myfile');  
+  
+app.get('/',function(req,res){  
+      res.sendFile(__dirname + "/index.html");  
+});  
+  
+app.post('/uploadjavatpoint',function(req,res){  
+    upload(req,res,function(err) {  
+        if(err) {  
+            return res.end("Error uploading file.");  
+        }  
+        res.end("File is uploaded successfully!");  
+    });  
+});  
+  
+app.listen(3000,function(){  
+    console.log("Server is running on port 2000");  
+}); 
